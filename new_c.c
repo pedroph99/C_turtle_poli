@@ -60,6 +60,8 @@ void imprime(WINDOW* win,  struct COMMAND_CHAR* ponteiro, char botao_pressionado
 			printw("%c",botao_pressionado);
 			(*current_pos)->pressed_char = botao_pressionado;
 			(*current_pos)->next = malloc(sizeof(struct COMMAND_CHAR));
+			(*current_pos)->next->next = NULL;
+			(*current_pos)->next->pressed_char = NULL;
 			mvwaddch(win, 1 , 12+position, (*current_pos)->pressed_char);
 			break;
 		}
@@ -71,6 +73,44 @@ void imprime(WINDOW* win,  struct COMMAND_CHAR* ponteiro, char botao_pressionado
 		}
 	}
 
+}
+
+void imprime_sem_botao(WINDOW* win,  struct COMMAND_CHAR* ponteiro){
+	int position = 0;
+	struct COMMAND_CHAR** current_pos = &ponteiro;
+	while(1){
+		if((*current_pos)->next == NULL){
+			if( ((*current_pos)->pressed_char ) != NULL){
+			mvwaddch(win, 1 , 12+position, (*current_pos)->pressed_char);}
+			break;
+		}
+		else{
+			printw("ok");
+			mvwaddch(win, 1 , 12+position, (*current_pos)->pressed_char);
+			current_pos = &((*current_pos)->next);
+			position++;
+			
+		}
+	}
+}
+
+void remove_char(WINDOW* win,  struct COMMAND_CHAR* ponteiro){
+	int position = 0;
+	struct COMMAND_CHAR** current_pos = &ponteiro;
+	while(1){
+		if((*current_pos)->next->next == NULL){
+			printw("ok");
+			(*current_pos)->next = NULL;
+			(*current_pos)->pressed_char = NULL;
+			break;
+		}
+		else{
+			mvwaddch(win, 1 , 12+position, (*current_pos)->pressed_char);
+			current_pos = &((*current_pos)->next);
+			position++;
+			
+		}
+	}
 }
 
 
@@ -95,11 +135,15 @@ int main(void){
 
 	//create the structure of the command line
 	struct COMMAND_CHAR characters;
+	characters.pressed_char =NULL;
 	characters.next = NULL;
 	struct COMMAND_CHAR* ponteiro_2 = &characters;
 
 	while(1){
 		delwin(main_window);
+		delwin(command_window);
+
+		WINDOW * command_window = newwin(3, cols, main_window_rows, 0);
 		WINDOW * main_window = newwin(main_window_rows, cols, 0, 0);
 		bbox(main_window, main_window_rows, cols);
 		bbox(command_window, 3, cols);
@@ -112,6 +156,7 @@ int main(void){
 		
 		//Fills the already occupied positions
 		cria_posicao(main_window, row_pos, col_pos, ponteiro);
+		imprime_sem_botao(command_window, ponteiro_2);
 		//Creates the main charater
 		mvwaddch(main_window, row_pos, col_pos, '@');
 		//Refresh both windows
@@ -124,7 +169,7 @@ int main(void){
 			col_pos--;
 			
 		}
-		else if(pressed_key == 65){
+		else if(pressed_key == 65 || pressed_key == 87){
 			row_pos--;
 		}
 		else if(pressed_key == 67){
@@ -138,9 +183,15 @@ int main(void){
 				char current_char = (char) pressed_key;
 				imprime(command_window, ponteiro_2, current_char);
 			}
-			else if(pressed_key>=65 && pressed_key <=90){
+			else if(pressed_key>=97 && pressed_key <=122){
 				char current_char = (char) pressed_key;
 				imprime(command_window, ponteiro_2, current_char);
+			}
+
+			else if(pressed_key == 127){
+				if (!(characters.pressed_char == NULL  && characters.next == NULL))
+					remove_char(command_window, ponteiro_2);
+				
 			}
 		
 		printw("%d", pressed_key);

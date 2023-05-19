@@ -28,6 +28,10 @@ void create_string (WINDOW * window, char * string, int size_string){
 		int col_position;
 		struct POSITION* next;
 	};
+ struct COMMAND_CHAR{
+	char pressed_char;
+	struct COMMAND_CHAR* next;
+ };
 
 void cria_posicao(WINDOW * win, int row_pos, int col_pos, struct POSITION* ponteiro){
 	struct POSITION** current_pos = &ponteiro;
@@ -47,6 +51,29 @@ void cria_posicao(WINDOW * win, int row_pos, int col_pos, struct POSITION* ponte
 	}
 
 }
+
+void imprime(WINDOW* win,  struct COMMAND_CHAR* ponteiro, char botao_pressionado){
+	int position = 0;
+	struct COMMAND_CHAR** current_pos = &ponteiro;
+	while(1){
+		if((*current_pos)->next == NULL){
+			printw("%c",botao_pressionado);
+			(*current_pos)->pressed_char = botao_pressionado;
+			(*current_pos)->next = malloc(sizeof(struct COMMAND_CHAR));
+			mvwaddch(win, 1 , 12+position, (*current_pos)->pressed_char);
+			break;
+		}
+		else{
+			mvwaddch(win, 1 , 12+position, (*current_pos)->pressed_char);
+			current_pos = &((*current_pos)->next);
+			position++;
+			
+		}
+	}
+
+}
+
+
 int main(void){	
 	initscr();			/* Start curses mode 		  */
 	int rows, cols;
@@ -65,6 +92,11 @@ int main(void){
 	struct POSITION positions;
 	positions.next = NULL;
 	struct POSITION* ponteiro = &positions;
+
+	//create the structure of the command line
+	struct COMMAND_CHAR characters;
+	characters.next = NULL;
+	struct COMMAND_CHAR* ponteiro_2 = &characters;
 
 	while(1){
 		delwin(main_window);
@@ -101,6 +133,15 @@ int main(void){
 		else if(pressed_key == 66){
 			row_pos++;
 		}
+
+		else if(pressed_key>=48 && pressed_key <=57){
+				char current_char = (char) pressed_key;
+				imprime(command_window, ponteiro_2, current_char);
+			}
+			else if(pressed_key>=65 && pressed_key <=90){
+				char current_char = (char) pressed_key;
+				imprime(command_window, ponteiro_2, current_char);
+			}
 		
 		printw("%d", pressed_key);
 	}

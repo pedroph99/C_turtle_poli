@@ -85,7 +85,6 @@ void imprime_sem_botao(WINDOW* win,  struct COMMAND_CHAR* ponteiro){
 			break;
 		}
 		else{
-			printw("ok");
 			mvwaddch(win, 1 , 12+position, (*current_pos)->pressed_char);
 			current_pos = &((*current_pos)->next);
 			position++;
@@ -93,13 +92,13 @@ void imprime_sem_botao(WINDOW* win,  struct COMMAND_CHAR* ponteiro){
 		}
 	}
 }
-
+//remove the last char digited
 void remove_char(WINDOW* win,  struct COMMAND_CHAR* ponteiro){
 	int position = 0;
 	struct COMMAND_CHAR** current_pos = &ponteiro;
 	while(1){
 		if((*current_pos)->next->next == NULL){
-			printw("ok");
+			free((*current_pos)->next->next);
 			(*current_pos)->next = NULL;
 			(*current_pos)->pressed_char = NULL;
 			break;
@@ -112,6 +111,49 @@ void remove_char(WINDOW* win,  struct COMMAND_CHAR* ponteiro){
 		}
 	}
 }
+//function that returns the size of the linked list.
+int tamanho_lista(WINDOW* win,  struct COMMAND_CHAR* ponteiro){
+	int size = 1;
+	struct COMMAND_CHAR** current_pos = &ponteiro;
+	while(1){
+		if((*current_pos)->next == NULL){
+			return 0;
+		}
+		if((*current_pos)->next->next == NULL){
+			return size;
+			printw("%d", size);
+			break;
+		}
+		else{
+			size++;
+			current_pos = &((*current_pos)->next);
+			
+		}
+	}
+}
+// função que preenche um array alocado dinamicamente.
+void catch_characters(char* digited_chars, struct COMMAND_CHAR* ponteiro){
+	int size = 0;
+	struct COMMAND_CHAR** current_pos = &ponteiro;
+	while(1){
+		if((*current_pos)->next == NULL){
+			
+			break;
+		}
+		if((*current_pos)->next->next == NULL){
+			digited_chars[size]= (*current_pos)->pressed_char;
+			break;
+		}
+		else{
+			digited_chars[size]= (*current_pos)->pressed_char;
+			size++;
+			current_pos = &((*current_pos)->next);
+			
+		}
+	}
+
+}
+
 
 
 int main(void){	
@@ -192,6 +234,15 @@ int main(void){
 				if (!(characters.pressed_char == NULL  && characters.next == NULL))
 					remove_char(command_window, ponteiro_2);
 				
+			}
+
+			else if(pressed_key == 10){
+				int size = tamanho_lista(command_window, ponteiro_2);
+				char * chars_digitados = malloc(size*sizeof(char));
+				catch_characters(chars_digitados, ponteiro_2);
+				if(strcmp(chars_digitados, "pedro") == 0){
+					printw("GANHEI");
+				}
 			}
 		
 		printw("%d", pressed_key);

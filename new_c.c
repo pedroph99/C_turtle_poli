@@ -1,6 +1,8 @@
 #include <ncurses.h>
 #include <math.h> 
 #include <stdlib.h>
+#include <time.h>
+#include <string.h>
 //Precisa-se criar um método bbox.
 void bbox( WINDOW * window, int window_rows, int window_cols){
 	// Surround the window with - and |
@@ -155,6 +157,234 @@ void catch_characters(char* digited_chars, struct COMMAND_CHAR* ponteiro){
 }
 
 
+void regex_input( char * input_char, char* result_char, int* pointer,   int size, int* check){
+	if(size >= 3){
+		if (input_char[0] == 'n' || input_char[0] == 's' || input_char[0] == 'o' || input_char[0] == 'e' ){
+			if(input_char[1] == 'e' || input_char[1] == 'o' || input_char[1] == ' '){
+				if (input_char[0] == 'n'){
+					printw("%d", input_char[1]);
+					if (input_char[1] == 'e'){
+						if (input_char[2] == ' '){
+							char  second_part[size-3];
+
+							for(int i =3; i<size; i++){
+								if ( ((int) input_char[i] >= 48) &&  (int) input_char[i] <= 57){
+									second_part[i-3] = (int) input_char[i];
+									strcpy(result_char, "ne");
+								}
+								else{
+									*check = 1;
+								}
+
+							}
+							int second_part_transform = atoi(second_part);
+							*pointer = second_part_transform;
+							
+							
+						
+						}
+
+						else{
+							*check = 1;
+						}
+					}
+
+
+
+					else if (input_char[1] == 'o'){
+						printw("putaquepariu");
+						if (input_char[2] == ' '){
+							char  second_part[size-3];
+
+							for(int i =3; i<size; i++){
+								if ( ((int) input_char[i] >= 48) &&  (int) input_char[i] <= 57){
+									second_part[i-3] = (int) input_char[i];
+									strcpy(result_char, "no");
+								}
+								else{
+									*check = 1;
+								}
+
+							}
+							int second_part_transform = atoi(second_part);
+							*pointer = second_part_transform;
+							
+							
+						
+						}
+
+						else{
+							*check = 1;
+						}
+					}
+
+
+					else if(input_char[1] == ' '){
+						printw("entrou aqui");
+						char  second_part[size-2];
+
+							for(int i =2; i<size; i++){
+								if ( ((int) input_char[i] >= 48) &&  (int) input_char[i] <= 57){
+									second_part[i-2] = (int) input_char[i];
+									strcpy(result_char, "n");
+								}
+								else{
+									*check = 1;
+								}
+
+							}
+							int second_part_transform = atoi(second_part);
+							*pointer = second_part_transform;
+							
+
+					}
+
+			}
+				else if(input_char[0] == 's'){
+
+
+
+					printw("%d", input_char[1]);
+					if (input_char[1] == 'e'){
+						if (input_char[2] == ' '){
+							char  second_part[size-3];
+
+							for(int i =3; i<size; i++){
+								if ( ((int) input_char[i] >= 48) &&  (int) input_char[i] <= 57){
+									second_part[i-3] = (int) input_char[i];
+									strcpy(result_char, "se");
+								}
+								else{
+									*check = 1;
+								}
+
+							}
+							int second_part_transform = atoi(second_part);
+							*pointer = second_part_transform;
+							
+							
+						
+						}
+
+						else{
+							*check = 1;
+						}
+					}
+
+
+
+					else if (input_char[1] == 'o'){
+						printw("putaquepariu");
+						if (input_char[2] == ' '){
+							char  second_part[size-3];
+
+							for(int i =3; i<size; i++){
+								if ( ((int) input_char[i] >= 48) &&  (int) input_char[i] <= 57){
+									second_part[i-3] = (int) input_char[i];
+									strcpy(result_char, "so");
+								}
+								else{
+									*check = 1;
+								}
+
+							}
+							int second_part_transform = atoi(second_part);
+							*pointer = second_part_transform;
+							
+							
+						
+						}
+
+						else{
+							*check = 1;
+						}
+					}
+
+
+					else if(input_char[1] == ' '){
+						printw("entrou aqui");
+						char  second_part[size-2];
+
+							for(int i =2; i<size; i++){
+								if ( ((int) input_char[i] >= 48) &&  (int) input_char[i] <= 57){
+									second_part[i-2] = (int) input_char[i];
+									strcpy(result_char, "s");
+								}
+								else{
+									*check = 1;
+								}
+
+							}
+							int second_part_transform = atoi(second_part);
+							*pointer = second_part_transform;
+							
+
+					}
+
+			
+
+
+
+				}
+				else if(input_char[0] == 'o'){
+					printw("entrou aqui");
+					if(input_char[1] == ' '){
+						char  second_part[size-2];
+
+							for(int i =2; i<size; i++){
+								if ( ((int) input_char[i] >= 48) &&  (int) input_char[i] <= 57){
+									second_part[i-2] = (int) input_char[i];
+									strcpy(result_char, "o");
+								}
+								else{
+									*check = 1;
+								}
+
+							}
+							int second_part_transform = atoi(second_part);
+							*pointer = second_part_transform;
+					}
+					else{
+						*check = 1;
+					}
+				}
+				else if(input_char[0] == 'e'){
+					if(input_char[1] == ' '){
+						char  second_part[size-2];
+
+							for(int i =2; i<size; i++){
+								if ( ((int) input_char[i] >= 48) &&  (int) input_char[i] <= 57){
+									second_part[i-2] = (int) input_char[i];
+									strcpy(result_char, "e");
+								}
+								else{
+									*check = 1;
+								}
+
+							}
+							int second_part_transform = atoi(second_part);
+							*pointer = second_part_transform;
+					}
+					else{
+						*check = 1;
+					}
+				}
+			else{
+				*check = 1;
+			}
+		}
+		else{
+			*check = 1;
+		}
+	}
+	else{
+		return 0;
+	}
+}
+
+
+}
+
 
 int main(void){	
 	initscr();			/* Start curses mode 		  */
@@ -169,8 +399,11 @@ int main(void){
 	refresh();
 
 	//create_positions
+	
 	int row_pos = floor(+main_window_rows-1)/2;
+	int * row_pos_ponteiro = &row_pos;
 	int col_pos = floor((cols-1)/2);
+	int * col_pos_ponteiro = &col_pos;
 	struct POSITION positions;
 	positions.next = NULL;
 	struct POSITION* ponteiro = &positions;
@@ -221,7 +454,7 @@ int main(void){
 			row_pos++;
 		}
 
-		else if(pressed_key>=48 && pressed_key <=57){
+		else if((pressed_key>=48 && pressed_key <=57) || pressed_key == 32){
 				char current_char = (char) pressed_key;
 				imprime(command_window, ponteiro_2, current_char);
 			}
@@ -240,9 +473,119 @@ int main(void){
 				int size = tamanho_lista(command_window, ponteiro_2);
 				char * chars_digitados = malloc(size*sizeof(char));
 				catch_characters(chars_digitados, ponteiro_2);
-				if(strcmp(chars_digitados, "pedro") == 0){
-					printw("GANHEI");
+				char teste_input[3];
+				int segundo_valor;
+				int * teste_int = &segundo_valor;
+				int checker = 0;
+				int * checker_pointer = &checker;
+				regex_input(chars_digitados,teste_input, teste_int,  size, checker_pointer);
+				if (checker == 0 ){
+					printw(teste_input);
+					if (strcmp(teste_input, "ne") == 0){
+						for(int i =0; i<segundo_valor; i++){
+							row_pos--;
+							col_pos++;
+							sleep(1);
+							printw("ok");
+						 	cria_posicao(main_window, row_pos, col_pos, ponteiro);
+							mvwaddch(main_window, row_pos, col_pos, '@');
+							wrefresh(main_window);
+
+						}
+
+
+					}
+					else if (strcmp(teste_input, "no") == 0){
+						for(int i =0; i<segundo_valor; i++){
+							row_pos--;
+							col_pos--;
+							sleep(1);
+							printw("ok");
+						 	cria_posicao(main_window, row_pos, col_pos, ponteiro);
+							mvwaddch(main_window, row_pos, col_pos, '@');
+							wrefresh(main_window);
+
+						}
 				}
+
+
+					else if (strcmp(teste_input, "n") == 0){
+						for(int i =0; i<segundo_valor; i++){
+							row_pos--;
+							sleep(1);
+							printw("ok");
+						 	cria_posicao(main_window, row_pos, col_pos, ponteiro);
+							mvwaddch(main_window, row_pos, col_pos, '@');
+							wrefresh(main_window);
+
+						}
+					}
+					
+					else if (strcmp(teste_input, "s") == 0){
+						for(int i =0; i<segundo_valor; i++){
+							row_pos++;
+							sleep(1);
+							printw("ok");
+						 	cria_posicao(main_window, row_pos, col_pos, ponteiro);
+							mvwaddch(main_window, row_pos, col_pos, '@');
+							wrefresh(main_window);
+
+						}
+					}
+
+					else if (strcmp(teste_input, "so") == 0){
+						for(int i =0; i<segundo_valor; i++){
+							row_pos++;
+							col_pos--;
+							sleep(1);
+							printw("ok");
+						 	cria_posicao(main_window, row_pos, col_pos, ponteiro);
+							mvwaddch(main_window, row_pos, col_pos, '@');
+							wrefresh(main_window);
+
+						}
+					}
+					
+					else if (strcmp(teste_input, "se") == 0){
+						for(int i =0; i<segundo_valor; i++){
+							row_pos++;
+							col_pos++;
+							sleep(1);
+							printw("ok");
+						 	cria_posicao(main_window, row_pos, col_pos, ponteiro);
+							mvwaddch(main_window, row_pos, col_pos, '@');
+							wrefresh(main_window);
+
+						}
+					}
+
+
+					else if (strcmp(teste_input, "o") == 0){
+						for(int i =0; i<segundo_valor; i++){
+							col_pos--;
+							sleep(1);
+							printw("ok");
+						 	cria_posicao(main_window, row_pos, col_pos, ponteiro);
+							mvwaddch(main_window, row_pos, col_pos, '@');
+							wrefresh(main_window);
+
+						}
+					}
+
+					else if (strcmp(teste_input, "e") == 0){
+						for(int i =0; i<segundo_valor; i++){
+							col_pos++;
+							sleep(1);
+							printw("ok");
+						 	cria_posicao(main_window, row_pos, col_pos, ponteiro);
+							mvwaddch(main_window, row_pos, col_pos, '@');
+							wrefresh(main_window);
+
+						}
+					}
+
+				}
+				
 			}
 		
 		printw("%d", pressed_key);

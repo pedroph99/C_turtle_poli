@@ -16,9 +16,9 @@ void bbox( WINDOW * window, int window_rows, int window_cols){
 		mvwaddch(window,window_rows-1,i,'-');
 	}
 }
-void create_string (WINDOW * window, char * string, int size_string){
+void create_string (WINDOW * window, char * string, int size_string, int col_start){
 	for(int x = 0; x<size_string; x++){
-		mvwaddch(window, 1 , 3+x, string[x]);
+		mvwaddch(window, 1 , col_start+x, string[x]);
 	}
 	
 }
@@ -46,7 +46,10 @@ void cria_posicao(WINDOW * win, int row_pos, int col_pos, struct POSITION* ponte
 			break;
 		}
 		else{
-			mvwaddch(win, (*current_pos)->row_position, (*current_pos)->col_position, '*');
+			// it avoids the unecessary use of memory;
+			if((*current_pos)->row_position == row_pos && (*current_pos)->col_position == col_pos){
+				break;
+			}
 			current_pos = &((*current_pos)->next);
 			
 		}
@@ -54,6 +57,23 @@ void cria_posicao(WINDOW * win, int row_pos, int col_pos, struct POSITION* ponte
 
 }
 
+
+void imprime_posicoes(WINDOW * win, int row_pos, int col_pos, struct POSITION* ponteiro){
+
+	struct POSITION** current_pos = &ponteiro;
+	while(1){
+		if((*current_pos)->next == NULL){
+			break;
+		}
+		else{
+			// it avoids the unecessary use of memory;
+			mvwaddch(win, (*current_pos)->row_position, (*current_pos)->col_position, '*');
+			current_pos = &((*current_pos)->next);
+			
+		}
+	}
+
+}
 void imprime(WINDOW* win,  struct COMMAND_CHAR* ponteiro, char botao_pressionado){
 	int position = 0;
 	struct COMMAND_CHAR** current_pos = &ponteiro;
@@ -389,6 +409,7 @@ void regex_input( char * input_char, char* result_char, int* pointer,   int size
 int main(void){	
 	initscr();			/* Start curses mode 		  */
 	int rows, cols;
+	int drawing = 1;
 	//Get the max_size of the stdscr
    	getmaxyx(stdscr, rows, cols);
 	int main_window_rows = rows -4;
@@ -425,12 +446,24 @@ int main(void){
 		
 		
 		//Creates the 'command line' string
-		create_string(command_window, "COMANDO: ", 9);
+		create_string(command_window, "COMANDO: ", 9, 3);
+		if(drawing == 1){
+			create_string(command_window, "DRAWING: ", 9, cols-13);
+		}
+		else{
+			create_string(command_window, "DRAWING*: ", 9, cols-13);
+		}
+		
 		//Enables special keys
 		keypad(main_window, TRUE);
 		
 		//Fills the already occupied positions
-		cria_posicao(main_window, row_pos, col_pos, ponteiro);
+		if(drawing == 1){
+			cria_posicao(main_window, row_pos, col_pos, ponteiro);
+			
+		}
+		imprime_posicoes(main_window, row_pos, col_pos, ponteiro);
+		
 		imprime_sem_botao(command_window, ponteiro_2);
 		//Creates the main charater
 		mvwaddch(main_window, row_pos, col_pos, '@');
@@ -468,6 +501,15 @@ int main(void){
 					remove_char(command_window, ponteiro_2);
 				
 			}
+			else if(pressed_key == 78){
+					if(drawing == 1){
+						drawing = 0;
+					}
+					else{
+						drawing = 1;
+					}
+				
+			}
 
 			else if(pressed_key == 10){
 				int size = tamanho_lista(command_window, ponteiro_2);
@@ -486,8 +528,12 @@ int main(void){
 							row_pos--;
 							col_pos++;
 							sleep(1);
-							printw("ok");
-						 	cria_posicao(main_window, row_pos, col_pos, ponteiro);
+							
+						 	if(drawing == 1){
+										cria_posicao(main_window, row_pos, col_pos, ponteiro);
+
+											}
+							imprime_posicoes(main_window, row_pos, col_pos, ponteiro);
 							mvwaddch(main_window, row_pos, col_pos, '@');
 							wrefresh(main_window);
 
@@ -497,12 +543,23 @@ int main(void){
 					}
 					else if (strcmp(teste_input, "no") == 0){
 						for(int i =0; i<segundo_valor; i++){
+
+							mvwaddch(main_window, row_pos, col_pos, ' ');
 							row_pos--;
 							col_pos--;
 							sleep(1);
-							printw("ok");
-						 	cria_posicao(main_window, row_pos, col_pos, ponteiro);
+							
+							if(drawing == 1){
+										cria_posicao(main_window, row_pos, col_pos, ponteiro);
+
+											}
+							imprime_posicoes(main_window, row_pos, col_pos, ponteiro);
 							mvwaddch(main_window, row_pos, col_pos, '@');
+							if(drawing == 0){
+								wrefresh(main_window);
+								usleep(1000*12);
+								mvwaddch(main_window, row_pos, col_pos, ' ');
+								;}
 							wrefresh(main_window);
 
 						}
@@ -513,8 +570,12 @@ int main(void){
 						for(int i =0; i<segundo_valor; i++){
 							row_pos--;
 							sleep(1);
-							printw("ok");
-						 	cria_posicao(main_window, row_pos, col_pos, ponteiro);
+							
+						 	if(drawing == 1){
+										cria_posicao(main_window, row_pos, col_pos, ponteiro);
+
+											}
+							imprime_posicoes(main_window, row_pos, col_pos, ponteiro);
 							mvwaddch(main_window, row_pos, col_pos, '@');
 							wrefresh(main_window);
 
@@ -525,8 +586,12 @@ int main(void){
 						for(int i =0; i<segundo_valor; i++){
 							row_pos++;
 							sleep(1);
-							printw("ok");
-						 	cria_posicao(main_window, row_pos, col_pos, ponteiro);
+							
+							if(drawing == 1){
+											cria_posicao(main_window, row_pos, col_pos, ponteiro);
+
+												}
+								imprime_posicoes(main_window, row_pos, col_pos, ponteiro);
 							mvwaddch(main_window, row_pos, col_pos, '@');
 							wrefresh(main_window);
 
@@ -538,8 +603,12 @@ int main(void){
 							row_pos++;
 							col_pos--;
 							sleep(1);
-							printw("ok");
-						 	cria_posicao(main_window, row_pos, col_pos, ponteiro);
+							
+						 	if(drawing == 1){
+										cria_posicao(main_window, row_pos, col_pos, ponteiro);
+
+											}
+							imprime_posicoes(main_window, row_pos, col_pos, ponteiro);
 							mvwaddch(main_window, row_pos, col_pos, '@');
 							wrefresh(main_window);
 
@@ -551,8 +620,12 @@ int main(void){
 							row_pos++;
 							col_pos++;
 							sleep(1);
-							printw("ok");
-						 	cria_posicao(main_window, row_pos, col_pos, ponteiro);
+							
+						 	if(drawing == 1){
+										cria_posicao(main_window, row_pos, col_pos, ponteiro);
+
+											}
+							imprime_posicoes(main_window, row_pos, col_pos, ponteiro);
 							mvwaddch(main_window, row_pos, col_pos, '@');
 							wrefresh(main_window);
 
@@ -564,8 +637,12 @@ int main(void){
 						for(int i =0; i<segundo_valor; i++){
 							col_pos--;
 							sleep(1);
-							printw("ok");
-						 	cria_posicao(main_window, row_pos, col_pos, ponteiro);
+							
+						 	if(drawing == 1){
+										cria_posicao(main_window, row_pos, col_pos, ponteiro);
+
+											}
+							imprime_posicoes(main_window, row_pos, col_pos, ponteiro);
 							mvwaddch(main_window, row_pos, col_pos, '@');
 							wrefresh(main_window);
 
@@ -576,8 +653,12 @@ int main(void){
 						for(int i =0; i<segundo_valor; i++){
 							col_pos++;
 							sleep(1);
-							printw("ok");
-						 	cria_posicao(main_window, row_pos, col_pos, ponteiro);
+							
+						 	if(drawing == 1){
+										cria_posicao(main_window, row_pos, col_pos, ponteiro);
+
+											}
+							imprime_posicoes(main_window, row_pos, col_pos, ponteiro);
 							mvwaddch(main_window, row_pos, col_pos, '@');
 							wrefresh(main_window);
 

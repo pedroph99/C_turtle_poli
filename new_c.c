@@ -79,7 +79,6 @@ void imprime(WINDOW* win,  struct COMMAND_CHAR* ponteiro, char botao_pressionado
 	struct COMMAND_CHAR** current_pos = &ponteiro;
 	while(1){
 		if((*current_pos)->next == NULL){
-			printw("%c",botao_pressionado);
 			(*current_pos)->pressed_char = botao_pressionado;
 			(*current_pos)->next = malloc(sizeof(struct COMMAND_CHAR));
 			(*current_pos)->next->next = NULL;
@@ -143,7 +142,6 @@ int tamanho_lista(WINDOW* win,  struct COMMAND_CHAR* ponteiro){
 		}
 		if((*current_pos)->next->next == NULL){
 			return size;
-			printw("%d", size);
 			break;
 		}
 		else{
@@ -182,7 +180,7 @@ void regex_input( char * input_char, char* result_char, int* pointer,   int size
 		if (input_char[0] == 'n' || input_char[0] == 's' || input_char[0] == 'o' || input_char[0] == 'e' ){
 			if(input_char[1] == 'e' || input_char[1] == 'o' || input_char[1] == ' '){
 				if (input_char[0] == 'n'){
-					printw("%d", input_char[1]);
+
 					if (input_char[1] == 'e'){
 						if (input_char[2] == ' '){
 							char  second_part[size-3];
@@ -212,7 +210,6 @@ void regex_input( char * input_char, char* result_char, int* pointer,   int size
 
 
 					else if (input_char[1] == 'o'){
-						printw("putaquepariu");
 						if (input_char[2] == ' '){
 							char  second_part[size-3];
 
@@ -240,7 +237,6 @@ void regex_input( char * input_char, char* result_char, int* pointer,   int size
 
 
 					else if(input_char[1] == ' '){
-						printw("entrou aqui");
 						char  second_part[size-2];
 
 							for(int i =2; i<size; i++){
@@ -264,7 +260,6 @@ void regex_input( char * input_char, char* result_char, int* pointer,   int size
 
 
 
-					printw("%d", input_char[1]);
 					if (input_char[1] == 'e'){
 						if (input_char[2] == ' '){
 							char  second_part[size-3];
@@ -294,7 +289,6 @@ void regex_input( char * input_char, char* result_char, int* pointer,   int size
 
 
 					else if (input_char[1] == 'o'){
-						printw("putaquepariu");
 						if (input_char[2] == ' '){
 							char  second_part[size-3];
 
@@ -322,7 +316,6 @@ void regex_input( char * input_char, char* result_char, int* pointer,   int size
 
 
 					else if(input_char[1] == ' '){
-						printw("entrou aqui");
 						char  second_part[size-2];
 
 							for(int i =2; i<size; i++){
@@ -347,7 +340,6 @@ void regex_input( char * input_char, char* result_char, int* pointer,   int size
 
 				}
 				else if(input_char[0] == 'o'){
-					printw("entrou aqui");
 					if(input_char[1] == ' '){
 						char  second_part[size-2];
 
@@ -405,7 +397,25 @@ void regex_input( char * input_char, char* result_char, int* pointer,   int size
 
 }
 
+void check_pos(int rows, int cols, int *pos_row, int* pos_col){
+	if(*pos_row >= (rows-1)){
+		*pos_row = 1;
+	}
 
+	else if(*pos_row < 1){
+		*pos_row = rows-2;
+	}
+
+	if(*pos_col >= (cols-1)){
+		*pos_col = 1;
+	}
+
+	else if(*pos_col < 1){
+		*pos_col = cols-2;
+	}
+
+	
+}
 int main(void){	
 	initscr();			/* Start curses mode 		  */
 	int rows, cols;
@@ -456,7 +466,7 @@ int main(void){
 		
 		//Enables special keys
 		keypad(main_window, TRUE);
-		
+		check_pos(main_window_rows, cols, row_pos_ponteiro, col_pos_ponteiro);
 		//Fills the already occupied positions
 		if(drawing == 1){
 			cria_posicao(main_window, row_pos, col_pos, ponteiro);
@@ -522,19 +532,24 @@ int main(void){
 				int * checker_pointer = &checker;
 				regex_input(chars_digitados,teste_input, teste_int,  size, checker_pointer);
 				if (checker == 0 ){
-					printw(teste_input);
 					if (strcmp(teste_input, "ne") == 0){
 						for(int i =0; i<segundo_valor; i++){
+							mvwaddch(main_window, row_pos, col_pos, ' ');
 							row_pos--;
 							col_pos++;
 							sleep(1);
-							
+							check_pos(main_window_rows, cols, row_pos_ponteiro, col_pos_ponteiro);
 						 	if(drawing == 1){
 										cria_posicao(main_window, row_pos, col_pos, ponteiro);
 
 											}
 							imprime_posicoes(main_window, row_pos, col_pos, ponteiro);
 							mvwaddch(main_window, row_pos, col_pos, '@');
+							if(drawing == 0){
+								wrefresh(main_window);
+								usleep(1000*12);
+								mvwaddch(main_window, row_pos, col_pos, ' ');
+								;}
 							wrefresh(main_window);
 
 						}
@@ -548,7 +563,7 @@ int main(void){
 							row_pos--;
 							col_pos--;
 							sleep(1);
-							
+							check_pos(main_window_rows, cols, row_pos_ponteiro, col_pos_ponteiro);
 							if(drawing == 1){
 										cria_posicao(main_window, row_pos, col_pos, ponteiro);
 
@@ -568,15 +583,21 @@ int main(void){
 
 					else if (strcmp(teste_input, "n") == 0){
 						for(int i =0; i<segundo_valor; i++){
+							mvwaddch(main_window, row_pos, col_pos, ' ');
 							row_pos--;
 							sleep(1);
-							
+							check_pos(main_window_rows, cols, row_pos_ponteiro, col_pos_ponteiro);
 						 	if(drawing == 1){
 										cria_posicao(main_window, row_pos, col_pos, ponteiro);
 
 											}
 							imprime_posicoes(main_window, row_pos, col_pos, ponteiro);
 							mvwaddch(main_window, row_pos, col_pos, '@');
+							if(drawing == 0){
+								wrefresh(main_window);
+								usleep(1000*12);
+								mvwaddch(main_window, row_pos, col_pos, ' ');
+								;}
 							wrefresh(main_window);
 
 						}
@@ -584,15 +605,21 @@ int main(void){
 					
 					else if (strcmp(teste_input, "s") == 0){
 						for(int i =0; i<segundo_valor; i++){
+							mvwaddch(main_window, row_pos, col_pos, ' ');
 							row_pos++;
 							sleep(1);
-							
+							check_pos(main_window_rows, cols, row_pos_ponteiro, col_pos_ponteiro);
 							if(drawing == 1){
 											cria_posicao(main_window, row_pos, col_pos, ponteiro);
 
 												}
 								imprime_posicoes(main_window, row_pos, col_pos, ponteiro);
 							mvwaddch(main_window, row_pos, col_pos, '@');
+							if(drawing == 0){
+								wrefresh(main_window);
+								usleep(1000*12);
+								mvwaddch(main_window, row_pos, col_pos, ' ');
+								;}
 							wrefresh(main_window);
 
 						}
@@ -600,16 +627,22 @@ int main(void){
 
 					else if (strcmp(teste_input, "so") == 0){
 						for(int i =0; i<segundo_valor; i++){
+							mvwaddch(main_window, row_pos, col_pos, ' ');
 							row_pos++;
 							col_pos--;
 							sleep(1);
-							
+							check_pos(main_window_rows, cols, row_pos_ponteiro, col_pos_ponteiro);
 						 	if(drawing == 1){
 										cria_posicao(main_window, row_pos, col_pos, ponteiro);
 
 											}
 							imprime_posicoes(main_window, row_pos, col_pos, ponteiro);
 							mvwaddch(main_window, row_pos, col_pos, '@');
+							if(drawing == 0){
+								wrefresh(main_window);
+								usleep(1000*12);
+								mvwaddch(main_window, row_pos, col_pos, ' ');
+								;}
 							wrefresh(main_window);
 
 						}
@@ -617,16 +650,22 @@ int main(void){
 					
 					else if (strcmp(teste_input, "se") == 0){
 						for(int i =0; i<segundo_valor; i++){
+							mvwaddch(main_window, row_pos, col_pos, ' ');
 							row_pos++;
 							col_pos++;
 							sleep(1);
-							
+							check_pos(main_window_rows, cols, row_pos_ponteiro, col_pos_ponteiro);
 						 	if(drawing == 1){
 										cria_posicao(main_window, row_pos, col_pos, ponteiro);
 
 											}
 							imprime_posicoes(main_window, row_pos, col_pos, ponteiro);
 							mvwaddch(main_window, row_pos, col_pos, '@');
+							if(drawing == 0){
+								wrefresh(main_window);
+								usleep(1000*12);
+								mvwaddch(main_window, row_pos, col_pos, ' ');
+								;}
 							wrefresh(main_window);
 
 						}
@@ -635,15 +674,21 @@ int main(void){
 
 					else if (strcmp(teste_input, "o") == 0){
 						for(int i =0; i<segundo_valor; i++){
+							mvwaddch(main_window, row_pos, col_pos, ' ');
 							col_pos--;
 							sleep(1);
-							
+							check_pos(main_window_rows, cols, row_pos_ponteiro, col_pos_ponteiro);
 						 	if(drawing == 1){
 										cria_posicao(main_window, row_pos, col_pos, ponteiro);
 
 											}
 							imprime_posicoes(main_window, row_pos, col_pos, ponteiro);
 							mvwaddch(main_window, row_pos, col_pos, '@');
+							if(drawing == 0){
+								wrefresh(main_window);
+								usleep(1000*12);
+								mvwaddch(main_window, row_pos, col_pos, ' ');
+								;}
 							wrefresh(main_window);
 
 						}
@@ -651,15 +696,22 @@ int main(void){
 
 					else if (strcmp(teste_input, "e") == 0){
 						for(int i =0; i<segundo_valor; i++){
+							mvwaddch(main_window, row_pos, col_pos, ' ');
 							col_pos++;
 							sleep(1);
-							
+							check_pos(main_window_rows, cols, row_pos_ponteiro, col_pos_ponteiro);
 						 	if(drawing == 1){
 										cria_posicao(main_window, row_pos, col_pos, ponteiro);
 
 											}
 							imprime_posicoes(main_window, row_pos, col_pos, ponteiro);
+							
 							mvwaddch(main_window, row_pos, col_pos, '@');
+							if(drawing == 0){
+								wrefresh(main_window);
+								usleep(1000*12);
+								mvwaddch(main_window, row_pos, col_pos, ' ');
+								;}
 							wrefresh(main_window);
 
 						}
@@ -669,7 +721,6 @@ int main(void){
 				
 			}
 		
-		printw("%d", pressed_key);
 	}
 	endwin();			/* End curses mode		  */
 	return 0;

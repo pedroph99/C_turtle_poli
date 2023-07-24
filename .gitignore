@@ -1,0 +1,33 @@
+# Compiled Object files
+*.o
+
+# Compiled Dynamic libraries
+*.so
+
+# Executables
+*.exe
+my_ncurses_program  # Replace this with the actual name of your executable if different
+
+# Libraries
+lib/
+
+# Dependency directories (e.g., for dependency managers like CMake or Make)
+build/
+bin/
+
+# IDE or Editor specific files
+.vscode/
+.idea/
+
+# macOS specific files
+.DS_Store
+
+# OS-specific files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Editor backup files
+*~
+*.bak
+*.swp

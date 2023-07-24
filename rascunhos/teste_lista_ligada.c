@@ -16,9 +16,6 @@ int main(int argc, char const *argv[])
 		struct usuario* next;
 	};
 
-	
-
-
 	struct usuario adm;
 	strcpy(adm.nome, "Rodrigo");
 	password_generator(adm.password);
@@ -29,15 +26,11 @@ int main(int argc, char const *argv[])
 		char current_password[9];
 		printf("------------SISTEMA DE CADASTRO-------------");
 		scanf("%s", &current_nome);
-		
 		if(current_nome[0] == 's'){
 			break;
 		}
 		password_generator(current_password);
-
-		
 		printf("Testing \n");
-
 
 		while(1){
 
@@ -110,10 +103,7 @@ void password_generator(char * password_space){
 			}
 
 			new_char[i] = (char) rand()%127+1;
-			
 		}
-	
 	}
-
 	strcpy(password_space, new_char);
 }

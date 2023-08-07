@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
+#include "menu.h"
 #include "quit.h"
 
 //Precisa-se criar um método bbox.
@@ -392,6 +393,9 @@ void check_pos(int rows, int cols, int *pos_row, int* pos_col){
 
 
 int main(void){
+
+    menuManager();
+
 	initscr();			/* Start curses mode 		  */
 	int rows, cols;
 	int drawing = 1;

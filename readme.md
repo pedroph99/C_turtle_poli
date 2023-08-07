@@ -3,7 +3,7 @@
 
 ### Para Compilar
 ~~~bash
-gcc -o output main.c quit.c -lncurses
+gcc -o output main.c quit.c menu.c -lncurses
 ~~~
 
 ### Para Executar

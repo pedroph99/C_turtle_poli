@@ -3,7 +3,7 @@
 
 ### Para Compilar
 ˋˋˋ
-gcc -o turtlePoli main.c quit.c -lncurses
+ gcc -o output main.c quit.c menu.c -lncurses
  ˋˋˋ
 
 

@@ -10,9 +10,9 @@ void menuManager(){
     getmaxyx(stdscr,y,x);
     noecho();
     char entrada= ' ';
-    bbox(stdscr, x, y);
     printMenu(x, y);
     while(entrada != 's'){
+        bbox(stdscr, y, x);
         entrada = getch();
         if(entrada == 'q')
             sair();
@@ -48,6 +48,11 @@ void printMenu(int x, int y){
 }
 
 void printIntructions(int x, int y){
+    char backButton[8] = "<B>ack";
+    char startButon[8] = "<S>tart";
+    mvprintw(y*3/5, (x/2)-20, backButton);
+    mvprintw(y*3/5, (x/2)+5, startButon);
+
     char rosa_dos_ventos[5][15] = {"      N      ",
                                    "  NO /|\\ NE  ",
                                    " O <--+--> L ",

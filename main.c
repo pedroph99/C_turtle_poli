@@ -3,22 +3,11 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
+#include<unistd.h>
 #include "menu.h"
 #include "quit.h"
 
-//Precisa-se criar um método bbox.
-void bbox( WINDOW * window, int window_rows, int window_cols){
-	// Surround the window with - and |
-	for(int i=0; i<window_rows; i++){
-		mvwaddch(window,i,0,'|');
-		mvwaddch(window,i,window_cols-1,'|');
-	}
-	int i = 0;
-	for(i; i<window_cols; i++){
-		mvwaddch(window,0,i,'-');
-		mvwaddch(window,window_rows-1,i,'-');
-	}
-}
+
 void create_string (WINDOW * window, char * string, int size_string, int col_start){
 	for(int x = 0; x<size_string; x++){
 		mvwaddch(window, 1 , col_start+x, string[x]);
@@ -364,9 +353,6 @@ void regex_input( char * input_char, char* result_char, int* pointer,   int size
 		else{
 			*check = 1;
 		}
-	}
-	else{
-		return 0;
 	}
 }
 

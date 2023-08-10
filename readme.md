@@ -2,12 +2,11 @@
 
 
 ### Para Compilar
-ˋˋˋ
- gcc -o output main.c quit.c menu.c -lncurses
- ˋˋˋ
-
+~~~bash
+gcc -o output main.c quit.c menu.c -lncurses
+~~~
 
 ### Para Executar
-ˋˋˋ
+~~~bash
 ./turtlePoli
- ˋˋˋ
+~~~

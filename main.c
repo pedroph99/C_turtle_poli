@@ -6,59 +6,13 @@
 #include<unistd.h>
 #include "menu.h"
 #include "quit.h"
+#include "position.h"
 
 
 void create_string (WINDOW * window, char * string, int size_string, int col_start){
 	for(int x = 0; x<size_string; x++){
 		mvwaddch(window, 1 , col_start+x, string[x]);
 	}
-}
-//Cria um struct para ser armazenado as posições. Utilizando a estrutura de dados lista ligada.
-struct POSITION
-    {
-		int row_position;
-		int col_position;
-		struct POSITION* next;
-};
-struct COMMAND_CHAR{
-	char pressed_char;
-	struct COMMAND_CHAR* next;
-};
-
-void cria_posicao(WINDOW * win, int row_pos, int col_pos, struct POSITION* ponteiro){
-	struct POSITION** current_pos = &ponteiro;
-	while(1){
-		if((*current_pos)->next == NULL){
-			(*current_pos)->row_position = row_pos;
-			(*current_pos)->col_position = col_pos;
-			(*current_pos)->next = malloc(sizeof(struct POSITION));
-			break;
-		}
-		else{
-			// it avoids the unecessary use of memory;
-			if((*current_pos)->row_position == row_pos && (*current_pos)->col_position == col_pos){
-				break;
-			}
-			current_pos = &((*current_pos)->next);
-		}
-	}
-}
-
-
-void imprime_posicoes(WINDOW * win, int row_pos, int col_pos, struct POSITION* ponteiro){
-
-	struct POSITION** current_pos = &ponteiro;
-	while(1){
-		if((*current_pos)->next == NULL){
-			break;
-		}
-		else{
-			// it avoids the unecessary use of memory;
-			mvwaddch(win, (*current_pos)->row_position, (*current_pos)->col_position, '*');
-			current_pos = &((*current_pos)->next);
-		}
-	}
-
 }
 
 void imprime(WINDOW* win,  struct COMMAND_CHAR* ponteiro, char botao_pressionado){

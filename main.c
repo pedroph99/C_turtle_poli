@@ -3,174 +3,12 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
+#include<unistd.h>
 #include "menu.h"
 #include "quit.h"
-
-//Precisa-se criar um método bbox.
-void bbox( WINDOW * window, int window_rows, int window_cols){
-	// Surround the window with - and |
-	for(int i=0; i<window_rows; i++){
-		mvwaddch(window,i,0,'|');
-		mvwaddch(window,i,window_cols-1,'|');
-	}
-	int i = 0;
-	for(i; i<window_cols; i++){
-		mvwaddch(window,0,i,'-');
-		mvwaddch(window,window_rows-1,i,'-');
-	}
-}
-void create_string (WINDOW * window, char * string, int size_string, int col_start){
-	for(int x = 0; x<size_string; x++){
-		mvwaddch(window, 1 , col_start+x, string[x]);
-	}
-}
-//Cria um struct para ser armazenado as posições. Utilizando a estrutura de dados lista ligada.
-struct POSITION
-    {
-		int row_position;
-		int col_position;
-		struct POSITION* next;
-};
-struct COMMAND_CHAR{
-	char pressed_char;
-	struct COMMAND_CHAR* next;
-};
-
-void cria_posicao(WINDOW * win, int row_pos, int col_pos, struct POSITION* ponteiro){
-	struct POSITION** current_pos = &ponteiro;
-	while(1){
-		if((*current_pos)->next == NULL){
-			(*current_pos)->row_position = row_pos;
-			(*current_pos)->col_position = col_pos;
-			(*current_pos)->next = malloc(sizeof(struct POSITION));
-			break;
-		}
-		else{
-			// it avoids the unecessary use of memory;
-			if((*current_pos)->row_position == row_pos && (*current_pos)->col_position == col_pos){
-				break;
-			}
-			current_pos = &((*current_pos)->next);
-		}
-	}
-}
-
-
-void imprime_posicoes(WINDOW * win, int row_pos, int col_pos, struct POSITION* ponteiro){
-
-	struct POSITION** current_pos = &ponteiro;
-	while(1){
-		if((*current_pos)->next == NULL){
-			break;
-		}
-		else{
-			// it avoids the unecessary use of memory;
-			mvwaddch(win, (*current_pos)->row_position, (*current_pos)->col_position, '*');
-			current_pos = &((*current_pos)->next);
-		}
-	}
-
-}
-
-void imprime(WINDOW* win,  struct COMMAND_CHAR* ponteiro, char botao_pressionado){
-	int position = 0;
-	struct COMMAND_CHAR** current_pos = &ponteiro;
-	while(1){
-		if((*current_pos)->next == NULL){
-			(*current_pos)->pressed_char = botao_pressionado;
-			(*current_pos)->next = malloc(sizeof(struct COMMAND_CHAR));
-			(*current_pos)->next->next = NULL;
-			(*current_pos)->next->pressed_char = NULL;
-			mvwaddch(win, 1 , 12+position, (*current_pos)->pressed_char);
-			break;
-		}
-		else{
-			mvwaddch(win, 1 , 12+position, (*current_pos)->pressed_char);
-			current_pos = &((*current_pos)->next);
-			position++;
-		}
-	}
-
-}
-
-void imprime_sem_botao(WINDOW* win,  struct COMMAND_CHAR* ponteiro){
-	int position = 0;
-	struct COMMAND_CHAR** current_pos = &ponteiro;
-	while(1){
-		if((*current_pos)->next == NULL){
-			if( ((*current_pos)->pressed_char ) != NULL){
-			mvwaddch(win, 1 , 12+position, (*current_pos)->pressed_char);}
-			break;
-		}
-		else{
-			mvwaddch(win, 1 , 12+position, (*current_pos)->pressed_char);
-			current_pos = &((*current_pos)->next);
-			position++;
-		}
-	}
-}
-
-//remove the last char digited
-void remove_char(WINDOW* win,  struct COMMAND_CHAR* ponteiro){
-	int position = 0;
-	struct COMMAND_CHAR** current_pos = &ponteiro;
-	while(1){
-		if((*current_pos)->next->next == NULL){
-			free((*current_pos)->next->next);
-			(*current_pos)->next = NULL;
-			(*current_pos)->pressed_char = NULL;
-			break;
-		}
-		else{
-			mvwaddch(win, 1 , 12+position, (*current_pos)->pressed_char);
-			current_pos = &((*current_pos)->next);
-			position++;
-		}
-	}
-}
-
-//function that returns the size of the linked list.
-int tamanho_lista(WINDOW* win,  struct COMMAND_CHAR* ponteiro){
-	int size = 1;
-	struct COMMAND_CHAR** current_pos = &ponteiro;
-	while(1){
-		if((*current_pos)->next == NULL){
-			return 0;
-		}
-		if((*current_pos)->next->next == NULL){
-			return size;
-			break;
-		}
-		else{
-			size++;
-			current_pos = &((*current_pos)->next);
-		}
-	}
-}
-
-// função que preenche um array alocado dinamicamente.
-void catch_characters(char* digited_chars, struct COMMAND_CHAR* ponteiro){
-	int size = 0;
-	struct COMMAND_CHAR** current_pos = &ponteiro;
-	while(1){
-
-		if((*current_pos)->next == NULL){
-			break;
-		}
-
-		if((*current_pos)->next->next == NULL){
-			digited_chars[size]= (*current_pos)->pressed_char;
-			break;
-		}
-
-		else{
-			digited_chars[size]= (*current_pos)->pressed_char;
-			size++;
-			current_pos = &((*current_pos)->next);
-		}
-	}
-}
-
+#include "position.h"
+#include "utils.h"
+#include "draw.h"
 
 void regex_input( char * input_char, char* result_char, int* pointer,   int size, int* check){
 	if(size >= 3){
@@ -364,9 +202,6 @@ void regex_input( char * input_char, char* result_char, int* pointer,   int size
 		else{
 			*check = 1;
 		}
-	}
-	else{
-		return 0;
 	}
 }
 

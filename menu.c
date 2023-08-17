@@ -10,9 +10,9 @@ void menuManager(){
     getmaxyx(stdscr,y,x);
     noecho();
     char entrada= ' ';
-
     printMenu(x, y);
     while(entrada != 's'){
+        bbox(stdscr, y, x);
         entrada = getch();
         if(entrada == 'q')
             sair();
@@ -48,28 +48,51 @@ void printMenu(int x, int y){
 }
 
 void printIntructions(int x, int y){
-    char rosa_dos_ventos[5][13] = {"      N      ",
+    char backButton[8] = "<B>ack";
+    char startButon[8] = "<S>tart";
+    mvprintw(y*3/5, (x/2)-20, backButton);
+    mvprintw(y*3/5, (x/2)+5, startButon);
+
+    char rosa_dos_ventos[5][15] = {"      N      ",
                                    "  NO /|\\ NE  ",
                                    " O <--+--> L ",
                                    "  SO \\|/ SE  ",
                                    "      S      "};
-    char instruction1[8][60] = {"Utilize as setas para se movimentar",
+    char instruction1[8][80] = { "Utilize as setas para se movimentar",
                                  "                                   ",
                                  "Pressione \"q\" a qualquer momento para sair",
                                  "                                            ",
                                  "                                            ",
-                                 "Pressione \"d\" para que a tartaruga ande SEM desenhar.",
-                                 "Para que ela volte a desenhar, só é preciso pressionar ",
-                                 " \"d\" novamente.                                      "};
+                                 "Pressione CAPSLOCK e \"N\" para que a tartaruga ande SEM desenhar.",
+                                 "Para que ela volte a desenhar, só é preciso pressionar",
+                                 "CAPSLOCK e \"N\" novamente.                                      "};
 
-    char instruction2[6][60] = {"Ao pressionar \"Caps Lock\", você podera digitar   ",
-                                "uma direção e a quantidade de casas que a tartaruga",
-                                "deve andar."                                        ,
-                                "                                                   ",
-                                "O comando das direções deve seguir as direções     ",
-                                "presentes na Rosa dos Ventos a seguir:              "};
+    char instruction2[5][60] = {"Você podera digitar uma direção e a quantidade ",
+                                "de casas que a tartaruga deve andar.",
+                                "                                      ",
+                                "O comando das direções deve seguir as direções",
+                                "presentes na Rosa dos Ventos a seguir:"};
 
      for(int i = 0; i< 6; i++){
-        mvprintw((y/3)+i, (x-sizeof(instruction1[i]))/2, instruction1[i]);
+        mvprintw((y/3)+i, (x-sizeof(instruction1[i]))/3, instruction1[i]);
      }
+     for(int i = 0; i< 5; i++){
+        mvprintw((y/3)+i, (x-sizeof(instruction1[i]))*2/3, instruction2[i]);
+     }
+     for(int i = 0; i< 5; i++){
+        mvprintw((y/3)+i+6, (x-sizeof(instruction1[i]))*2/3, rosa_dos_ventos[i]);
+     }
+}
+
+void bbox( WINDOW * window, int window_rows, int window_cols){
+    // Surround the window with - and |
+    for(int i=0; i<window_rows; i++){
+        mvwaddch(window,i,0,'|');
+        mvwaddch(window,i,window_cols-1,'|');
+    }
+    int i = 0;
+    for(i; i<window_cols; i++){
+        mvwaddch(window,0,i,'-');
+        mvwaddch(window,window_rows-1,i,'-');
+    }
 }

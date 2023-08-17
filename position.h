@@ -12,4 +12,4 @@
         };
         void cria_posicao(WINDOW * win, int row_pos, int col_pos, struct POSITION* ponteiro);
         void imprime_posicoes(WINDOW * win, int row_pos, int col_pos, struct POSITION* ponteiro);
-    #endif
+#endif

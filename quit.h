@@ -1,4 +1,4 @@
 #ifndef QUIT_H
- #define QUIT_H
-  void sair();
+    #define QUIT_H
+        void sair();
 #endif
